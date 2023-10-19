@@ -16,6 +16,18 @@ logging:
 spring:
   config:
     activate:
-      on-profile: docker
-    import: configserver:http://config-server:8888
+      on-profile: k8s
+    import: configserver:http://config-server:80
 
+server:
+  port: 8080
+
+eureka:
+  instance:
+    hostname: localhost
+  # standalone mode
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/

@@ -7,10 +7,30 @@ spring:
     cache-names: vets
   profiles:
     active: production
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-server:80/eureka/eureka/
 
 ---
 spring:
   config:
     activate:
       on-profile: docker
-    import: configserver:http://config-server:8888
+    import: configserver:http://config-server:80
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+    import: configserver:http://config-server:80
+  datasource:
+    url: jdbc:mysql://mysql.mysql.svc.cluster.local:3306/petclinic?useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  sql:
+    init:
+      schema-locations: classpath*:db/mysql/schema.sql
+      data-locations: classpath*:db/mysql/data.sql
+      init: ALWAYS

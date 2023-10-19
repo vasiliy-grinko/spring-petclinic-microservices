@@ -31,5 +31,5 @@ spring:
 spring:
   config:
     activate:
-      on-profile: docker
-    import: configserver:http://config-server:8888
+      on-profile: k8s
+    import: configserver:http://config-server:80

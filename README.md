@@ -90,7 +90,7 @@ In the `application.yml` of the [Configuration repository], set the `initializat
 
 If you are running the microservices with Docker, you have to add the `mysql` profile into the (Dockerfile)[docker/Dockerfile]:
 ```
-ENV SPRING_PROFILES_ACTIVE docker,mysql
+ENV SPRING_PROFILES_ACTIVE mysql
 ```
 In the `mysql section` of the `application.yml` from the [Configuration repository], you have to change 
 the host and port of your MySQL JDBC connection string. 

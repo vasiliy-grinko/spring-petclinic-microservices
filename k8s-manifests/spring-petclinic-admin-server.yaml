@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: admin-server
+spec:
+  selector:
+    matchLabels:
+      app: admin-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: admin-server
+    spec:
+      containers:
+        - name: admin-server
+          image: kpnreg.azurecr.io/spring-petclinic-admin-server:version
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "cloud"
+            - name: CONFIG_SERVER_URL
+              value: "http://config-server:80/"
+          # readinessProbe:
+          #   initialDelaySeconds: 60
+          #   preiodSeconds: 10
+          #   failureThreshold: 3
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          # livenessProbe:
+          #   initialDelaySeconds: 60
+          #   failureThreshold: 3
+          #   httpGet:
+          #     path: /actuator/health
+          #     port: 8080
+          resources:
+            limits:
+              cpu: 300m
+              memory: 500Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+      imagePullSecrets:
+        - name: acr-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-server
+spec:
+  type: ClusterIP
+  selector:
+    app: admin-server
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
